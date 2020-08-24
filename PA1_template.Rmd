@@ -1,25 +1,110 @@
 ---
 title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
+author: "Ray Bem"
+date: "8/24/2020"
+output: html_document
+keep_md: true
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# need dplyr for manipulation
+
+```{r}
+require(dplyr)
+require(ggplot2)
+```
 
 ## Loading and preprocessing the data
+## unzip file if not there...
+```{r}
+ifelse(file.exists("activity.csv")==TRUE, 
+       "activity.csv available",
+       unzip("activity.zip", junkpaths=TRUE, exdir = "."))
 
+raw_data_in <- read.csv("activity.csv")
+head(raw_data_in)
+summary(raw_data_in$steps)
+summary(raw_data_in$interval)
+nrow(raw_data_in)
+count(raw_data_in,interval)
+count(raw_data_in,date)
+```
 
 
 ## What is mean total number of steps taken per day?
+```{r}
+activity_data <-raw_data_in %>%
+	mutate(newdate=as.Date(date)) %>% 
+	group_by(newdate) %>%
+	mutate(total_steps_per_day=sum(steps, na.rm = TRUE))
 
+activity_data %>% distinct(newdate, total_steps_per_day) %>%
+	ungroup %>%
+	summarise(
+	mean_steps_per_day=mean(total_steps_per_day, na.rm = TRUE),
+	median_steps_per_day=median(total_steps_per_day, na.rm = TRUE))
 
+ggplot(data = activity_data) +
+	geom_col(mapping = aes(x=newdate, y=steps))
+```
 
 ## What is the average daily activity pattern?
+```{r}
+interval_activity <- activity_data %>% 
+	ungroup %>% 
+	group_by(interval) %>% 
+	summarise(mean_interval_steps_per_day=mean(steps, na.rm = TRUE))
 
+ggplot(interval_activity) +
+	geom_line(mapping = aes(x=interval, y=mean_interval_steps_per_day))
 
+max<-interval_activity %>% ungroup %>% mutate(max=max(mean_interval_steps_per_day)) %>% distinct(max)
+str(max)
+max
+
+interval_activity %>% filter(mean_interval_steps_per_day==max(interval_activity$mean_interval_steps_per_day))
+```
 
 ## Imputing missing values
 
+```{r}
+activity_data2 <- activity_data %>% ungroup %>%
+	left_join(interval_activity, by = "interval") %>% 
+#	mutate(newtotalsteps=ifelse(is.na(steps)==TRUE, mean_interval_steps_per_day, total_steps_per_day))
+	mutate(newtotalsteps=ifelse(is.na(steps)==TRUE, mean_interval_steps_per_day, steps),
+	       imputed_flag=ifelse(is.na(steps)==TRUE, "imputed (mean for interval)", "untouched")) %>% ungroup
+
+## looking at the NA's for steps, along with the zero values...
+tx<-activity_data%>%
+	ungroup%>% 
+	mutate(na_steps=is.na(steps), zero_steps=(steps==0)) %>% group_by(newdate)
+#	count(is.na(steps),steps==0)
+tx%>%filter(na_steps==TRUE)%>%distinct(newdate)
 
 
-## Are there differences in activity patterns between weekdays and weekends?
+ggplot(data = activity_data2) +
+#	geom_col(mapping = aes(x=newdate, y=newtotalsteps, fill=imputed_flag)) +
+#	geom_col(data=activity_data, mapping = aes(x=newdate, y=steps)) +
+	geom_col(mapping = aes(x=newdate, y=newtotalsteps, fill=imputed_flag)) 
+# +
+# 	geom_col(data=activity_data, mapping = aes(x=newdate, y=steps), alpha=.5, color="black")
+
+ggplot(data = activity_data2) +
+#	geom_col(mapping = aes(x=newdate, y=newtotalsteps, fill=imputed_flag)) +
+#	geom_col(data=activity_data, mapping = aes(x=newdate, y=steps)) +
+#	geom_jitter(mapping = aes(x=newdate, y=newtotalsteps, fill=imputed_flag, color=imputed_flag), alpha=.5) +
+	geom_point(data=activity_data, mapping = aes(x=newdate, y=steps), alpha=.7, color="black", size=3) +
+	geom_point(mapping = aes(x=newdate, y=newtotalsteps, fill=imputed_flag, color=imputed_flag), alpha=.5, size=1.5)
+
+
+activity_data2 %>% ungroup %>% distinct(newdate, newtotalsteps) %>%
+	#ungroup %>%
+	summarise(
+	mean_steps_per_day=mean(newtotalsteps, na.rm = TRUE),
+	median_steps_per_day=median(newtotalsteps, na.rm = TRUE))
+```
+
+# This concludes the work (finish later)...
