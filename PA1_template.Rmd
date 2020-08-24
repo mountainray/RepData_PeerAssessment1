@@ -154,16 +154,18 @@ ggplot(data = activity_data2) +
  	ggtitle("Figure 3b: Daily Activity pattern, with NAs replaced with interval means")
 ```
 
-# Need to check on this...does it make sense?
+# Need to check on this...does it make sense?  
+
+# why isn't the mean higher?  we only added data, and they were 10k days
 
 ```{r}
 activity_data %>% ungroup %>% 
-	distinct(newdate, steps) %>%
+#	distinct(newdate, steps) %>%
 	summarise(
 	original_mean_steps_per_day=mean(steps, na.rm = TRUE),
 	original_median_steps_per_day=median(steps, na.rm = TRUE))
 activity_data2 %>% ungroup %>% 
-	distinct(newdate, newtotalsteps) %>%
+#	distinct(newdate, newtotalsteps) %>%
 	summarise(
 	plugged_mean_steps_per_day=mean(newtotalsteps, na.rm = TRUE),
 	plugged_median_steps_per_day=median(newtotalsteps, na.rm = TRUE))
