@@ -30,8 +30,8 @@ head(raw_data_in)
 summary(raw_data_in$steps)
 summary(raw_data_in$interval)
 nrow(raw_data_in)
-count(raw_data_in,interval)
-count(raw_data_in,date)
+count(count(raw_data_in,interval),n)
+count(count(raw_data_in,date),n)
 ```
 
 
@@ -106,6 +106,29 @@ activity_data2 %>% ungroup %>% distinct(newdate, newtotalsteps) %>%
 	summarise(
 	mean_steps_per_day=mean(newtotalsteps, na.rm = TRUE),
 	median_steps_per_day=median(newtotalsteps, na.rm = TRUE))
+```
+
+# Are there differences in activity patterns between weekdays and weekends?
+
+```{r}
+weekdaysx <- weekdays(activity_data$newdate)
+
+activity_data3 <- data.frame(activity_data2, weekdaysx) %>% mutate(weekend_flag=ifelse(weekdaysx %in% c("Saturday","Sunday"), "weekend", "weekday"))
+head(activity_data3)
+count(activity_data3, weekend_flag)
+
+activity_data4 <- activity_data3 %>% group_by(weekend_flag, interval) %>% summarize(mean_steps=mean(newtotalsteps), mean_steps2=mean(steps, na.rm = TRUE))
+head(activity_data4)
+
+ggplot(activity_data4) +
+	geom_line(mapping = aes(x=interval, y=mean_steps2, color=weekend_flag)) +
+#	geom_smooth(mapping = aes(x=interval, y=mean_steps2, color=weekend_flag)) +
+#	geom_abline(mapping = aes(intercept=mean(activity_data4$mean_steps2), slope=0)) +
+	facet_wrap(~weekend_flag, nrow=2, ncol=1)
+
+activity_data4%>%group_by(weekend_flag)%>%summarize(mean_steps=mean(mean_steps), mean_steps2=mean(mean_steps2))
+
+
 ```
 
 # This concludes the work (finish later)...
