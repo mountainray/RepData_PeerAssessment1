@@ -49,7 +49,7 @@ activity_data %>% distinct(newdate, total_steps_per_day) %>%
 	median_steps_per_day=median(total_steps_per_day, na.rm = TRUE))
 
 ggplot(data = activity_data) +
-	geom_col(mapping = aes(x=newdate, y=steps), color="purple")
+	geom_col(mapping = aes(x=newdate, y=steps))
 ```
 
 ## What is the average daily activity pattern?

@@ -152,7 +152,7 @@ activity_data %>% distinct(newdate, total_steps_per_day) %>%
 
 ```r
 ggplot(data = activity_data) +
-	geom_col(mapping = aes(x=newdate, y=steps), color="purple")
+	geom_col(mapping = aes(x=newdate, y=steps))
 ```
 
 ```
