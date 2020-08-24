@@ -2,15 +2,16 @@
 title: "Reproducible Research: Peer Assessment 1"
 author: "Ray Bem"
 date: "8/24/2020"
-output: html_document
-keep_md: true
+output: 
+  html_document: 
+    keep_md: yes
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# need dplyr for manipulation
+Need dplyr/ggplot2 for manipulation
 
 ```{r}
 require(dplyr)
