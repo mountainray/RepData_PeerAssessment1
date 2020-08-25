@@ -27,7 +27,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Attaching packages ────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
+## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
 ```
 
 ```
@@ -38,7 +38,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Conflicts ───────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## x dplyr::filter() masks stats::filter()
 ## x dplyr::lag()    masks stats::lag()
 ```
@@ -77,7 +77,7 @@ Here are some simple checks to see what the steps (this variable is the main mea
 
 We confirm the expected data record counts (n=17,568).
 
-For any one date (24 hour period), we should see 288 records (288 x 5 minutes per interval = =1440 minutes, 1440 minutes / 60 = 24 hours). This validates.
+For any one date (24 hour period), we should see 288 records (288 x 5 minutes per interval = 1440 minutes, 1440 minutes / 60 = 24 hours). This validates.
 
 
 ```r
@@ -107,31 +107,21 @@ nrow(raw_data_in)
 ```
 
 ```r
-count(count(raw_data_in,interval),n)
+distinct(count(raw_data_in,interval),n)
 ```
 
 ```
-## Storing counts in `nn`, as `n` already present in input
-## ℹ Use `name = "new_name"` to pick a new name.
-```
-
-```
-##    n  nn
-## 1 61 288
+##    n
+## 1 61
 ```
 
 ```r
-count(count(raw_data_in,date),n)
+distinct(count(raw_data_in,date),n)
 ```
 
 ```
-## Storing counts in `nn`, as `n` already present in input
-## ℹ Use `name = "new_name"` to pick a new name.
-```
-
-```
-##     n nn
-## 1 288 61
+##     n
+## 1 288
 ```
 
 ## What is mean total number of steps taken per day?
@@ -143,22 +133,25 @@ We then take the distinct (by newdate, and the repeating total_steps_per_day), t
 
 ```r
 activity_data <-raw_data_in %>%
-	mutate(newdate=as.Date(date)) %>% 
-	group_by(newdate) %>%
-	mutate(total_steps_per_day=sum(steps, na.rm = TRUE))
+	mutate(newdate=as.Date(date))
 
-activity_data %>% distinct(newdate, total_steps_per_day) %>%
-	ungroup %>%
-	summarise(
-	mean_steps_per_day=mean(total_steps_per_day, na.rm = TRUE),
-	median_steps_per_day=median(total_steps_per_day, na.rm = TRUE))
+activity_data %>% select(newdate, steps) %>%
+	group_by(newdate) %>%
+	summarise(total_steps_per_day=sum(steps, na.rm = TRUE)) %>%
+	ungroup %>% 
+		summarize(mean_daily_steps=mean(total_steps_per_day, na.rm = TRUE),
+			  median_daily_steps=median(total_steps_per_day, na.rm = TRUE))
+```
+
+```
+## `summarise()` ungrouping output (override with `.groups` argument)
 ```
 
 ```
 ## # A tibble: 1 x 2
-##   mean_steps_per_day median_steps_per_day
-##                <dbl>                <int>
-## 1              9354.                10395
+##   mean_daily_steps median_daily_steps
+##              <dbl>              <int>
+## 1            9354.              10395
 ```
 
 **Figure 1** shows activity level for each day.  We note the existence of 2,304 NAs for the steps variable.  Most data appear to be around 10,000 steps, which is supported by the mean/median reported above.
@@ -166,7 +159,7 @@ activity_data %>% distinct(newdate, total_steps_per_day) %>%
 
 ```r
 ggplot(data = activity_data) +
-	geom_col(mapping = aes(x=newdate, y=steps), color="blue") +
+	geom_col(mapping = aes(x=newdate, y=steps), fill="blue") +
 	ggtitle("Figure 1: Total Steps taken per day")
 ```
 
@@ -183,7 +176,7 @@ Here we will examine the patterns in activity by grouping the intervals/steps ac
 
 ```r
 interval_activity <- activity_data %>% 
-	ungroup %>% 
+	select(interval, steps) %>%
 	group_by(interval) %>% 
 	summarise(mean_interval_steps_per_day=mean(steps, na.rm = TRUE))
 ```
@@ -235,55 +228,50 @@ The dates below are the days where we had all NAs -- there were no interval impu
 
 ```r
 na_check <- activity_data %>%
-	ungroup %>% 
 	mutate(na_steps=is.na(steps), 
 	       zero_steps=(steps==0),
 	       imputed_flag=ifelse(is.na(steps)==TRUE, "imputed (mean for interval)", "untouched")) %>% 
 	group_by(newdate) %>%
-	filter(na_steps==TRUE)%>%distinct(newdate, na_steps, zero_steps, imputed_flag, steps, total_steps_per_day)
+	filter(na_steps==TRUE)%>%
+	distinct(newdate, na_steps, zero_steps, imputed_flag, steps)
 na_check
 ```
 
 ```
-## # A tibble: 8 x 6
+## # A tibble: 8 x 5
 ## # Groups:   newdate [8]
-##   steps newdate    total_steps_per_d… na_steps zero_steps imputed_flag          
-##   <int> <date>                  <int> <lgl>    <lgl>      <chr>                 
-## 1    NA 2012-10-01                  0 TRUE     NA         imputed (mean for int…
-## 2    NA 2012-10-08                  0 TRUE     NA         imputed (mean for int…
-## 3    NA 2012-11-01                  0 TRUE     NA         imputed (mean for int…
-## 4    NA 2012-11-04                  0 TRUE     NA         imputed (mean for int…
-## 5    NA 2012-11-09                  0 TRUE     NA         imputed (mean for int…
-## 6    NA 2012-11-10                  0 TRUE     NA         imputed (mean for int…
-## 7    NA 2012-11-14                  0 TRUE     NA         imputed (mean for int…
-## 8    NA 2012-11-30                  0 TRUE     NA         imputed (mean for int…
+##   steps newdate    na_steps zero_steps imputed_flag               
+##   <int> <date>     <lgl>    <lgl>      <chr>                      
+## 1    NA 2012-10-01 TRUE     NA         imputed (mean for interval)
+## 2    NA 2012-10-08 TRUE     NA         imputed (mean for interval)
+## 3    NA 2012-11-01 TRUE     NA         imputed (mean for interval)
+## 4    NA 2012-11-04 TRUE     NA         imputed (mean for interval)
+## 5    NA 2012-11-09 TRUE     NA         imputed (mean for interval)
+## 6    NA 2012-11-10 TRUE     NA         imputed (mean for interval)
+## 7    NA 2012-11-14 TRUE     NA         imputed (mean for interval)
+## 8    NA 2012-11-30 TRUE     NA         imputed (mean for interval)
 ```
 
-First, two new variables are created, newtotalsteps will be the original value for steps normally, but for NA records we will join on the average activity per interval (created above, interval_activity data frame). A flag is created to more easily see what we have plugged.
+First, two new variables are created, newsteps will be the original value for steps normally, but for NA records we will join on the average activity per interval (created above, interval_activity data frame). A flag is created to more easily see what we have plugged.
 
 
 ```r
 activity_data2 <- activity_data %>% ungroup %>%
 	left_join(interval_activity, by = "interval") %>% 
-	mutate(newtotalsteps=ifelse(is.na(steps)==TRUE, mean_interval_steps_per_day, steps),
+	mutate(newsteps=ifelse(is.na(steps)==TRUE, mean_interval_steps_per_day, steps),
 	       imputed_flag=ifelse(is.na(steps)==TRUE, "imputed (mean for interval)", "untouched")) %>% ungroup
 ```
 
-Now, let's see what comes through in the plugged steps variable (newtotalsteps). **Figure 3** shows us a picture of what the new activity looks like, with the data we imputed/plugged.
+Now, let's see what comes through in the plugged steps variable (newsteps). **Figure 3** shows us a picture of what the new activity looks like, with the data we imputed/plugged.
 
 
 ```r
 ggplot(data = activity_data2) +
-	geom_col(mapping = aes(x=newdate, y=newtotalsteps, fill=imputed_flag)) +
+	geom_col(mapping = aes(x=newdate, y=newsteps, fill=imputed_flag)) +
 	ggtitle("Figure 3a: Daily Activity pattern, with NAs replaced with interval means")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
-
-```r
-# +
-# 	geom_col(data=activity_data, mapping = aes(x=newdate, y=steps), alpha=.5, color="black")
-```
 
 **Figure 3b** is a similar view, this one showing the original points (black), overlayed with our new values.  We can see that no within day plugging occurred, only whole days recieved the imputation.
 
@@ -291,7 +279,7 @@ ggplot(data = activity_data2) +
 ```r
 ggplot(data = activity_data2) +
 	geom_point(data=activity_data, mapping = aes(x=newdate, y=steps), alpha=.7, color="black", size=3) +
-	geom_point(mapping = aes(x=newdate, y=newtotalsteps, fill=imputed_flag, color=imputed_flag), size=.5) +
+	geom_point(mapping = aes(x=newdate, y=newsteps, fill=imputed_flag, color=imputed_flag), size=.5) +
  	ggtitle("Figure 3b: Daily Activity pattern, with NAs replaced with interval means")
 ```
 
@@ -301,38 +289,90 @@ ggplot(data = activity_data2) +
 
 ![](PA1_template_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
-# Need to check on this...does it make sense?
+# Need to check on this...does it make sense?  
+
+# why isn't the mean higher?  we only added data, and they were 10k days
 
 
 ```r
-activity_data %>% ungroup %>% 
-	distinct(newdate, steps) %>%
-	summarise(
-	original_mean_steps_per_day=mean(steps, na.rm = TRUE),
-	original_median_steps_per_day=median(steps, na.rm = TRUE))
+activity_data %>% 
+	select(newdate, steps) %>%
+	group_by(newdate) %>%
+	summarise(total_daily_steps=sum(steps, na.rm = TRUE)) %>%
+	ungroup %>% 
+		summarize(mean_daily_steps=mean(total_daily_steps, na.rm = TRUE),
+			  median_daily_steps=median(total_daily_steps, na.rm = TRUE))
+```
+
+```
+## `summarise()` ungrouping output (override with `.groups` argument)
 ```
 
 ```
 ## # A tibble: 1 x 2
-##   original_mean_steps_per_day original_median_steps_per_day
-##                         <dbl>                         <int>
-## 1                        154.                            68
+##   mean_daily_steps median_daily_steps
+##              <dbl>              <int>
+## 1            9354.              10395
 ```
 
 ```r
-activity_data2 %>% ungroup %>% 
-	distinct(newdate, newtotalsteps) %>%
+activity_data2 %>% 
+	ungroup %>%
+	select(newdate, newsteps) %>%
+	group_by(newdate) %>%
+		summarise(total_daily_newsteps=sum(newsteps)) %>%
+		ungroup %>%
 	summarise(
-	plugged_mean_steps_per_day=mean(newtotalsteps, na.rm = TRUE),
-	plugged_median_steps_per_day=median(newtotalsteps, na.rm = TRUE))
+	mean_daily_newsteps=mean(total_daily_newsteps, na.rm = TRUE),
+	median_daily_newsteps=median(total_daily_newsteps, na.rm = TRUE))
+```
+
+```
+## `summarise()` ungrouping output (override with `.groups` argument)
 ```
 
 ```
 ## # A tibble: 1 x 2
-##   plugged_mean_steps_per_day plugged_median_steps_per_day
-##                        <dbl>                        <dbl>
-## 1                       112.                         50.0
+##   mean_daily_newsteps median_daily_newsteps
+##                 <dbl>                 <dbl>
+## 1              10766.                10766.
 ```
+
+```r
+ggplot(filter(activity_data2, newsteps>0)) +
+	geom_histogram(mapping=aes(x=newsteps), fill="black", binwidth = 10) + 
+	geom_histogram(mapping=aes(x=steps), fill="yellow", binwidth = 10, alpha=.5) 
+```
+
+```
+## Warning: Removed 2152 rows containing non-finite values (stat_bin).
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+
+```r
+ggplot(filter(activity_data2, newsteps>0)) +
+	geom_histogram(mapping=aes(x=newsteps), fill="black", binwidth = 10) + 
+	geom_histogram(mapping=aes(x=steps), fill="yellow", binwidth = 10, alpha=.5) 
+```
+
+```
+## Warning: Removed 2152 rows containing non-finite values (stat_bin).
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-12-2.png)<!-- -->
+
+```r
+hist(activity_data2$steps)
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-12-3.png)<!-- -->
+
+```r
+hist(activity_data2$newsteps)
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-12-4.png)<!-- -->
 
 # Are there differences in activity patterns between weekdays and weekends?
 
@@ -356,7 +396,7 @@ count(activity_data3, weekend_flag)
 ```r
 activity_data4 <- activity_data3 %>% 
 	group_by(weekend_flag, interval) %>% 
-	summarize(mean_steps=mean(newtotalsteps), mean_steps2=mean(steps, na.rm = TRUE))
+	summarize(mean_steps=mean(newsteps), mean_steps2=mean(steps, na.rm = TRUE))
 ```
 
 ```
