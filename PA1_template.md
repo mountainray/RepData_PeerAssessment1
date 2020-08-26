@@ -28,20 +28,20 @@ library(tidyverse)
 ```
 
 ```
-## ── Attaching packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
+── Attaching packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
 ```
 
 ```
-## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
-## ✓ tibble  3.0.3     ✓ dplyr   1.0.1
-## ✓ tidyr   1.1.1     ✓ stringr 1.4.0
-## ✓ readr   1.3.1     ✓ forcats 0.5.0
+✓ ggplot2 3.3.2     ✓ purrr   0.3.4
+✓ tibble  3.0.3     ✓ dplyr   1.0.1
+✓ tidyr   1.1.1     ✓ stringr 1.4.0
+✓ readr   1.3.1     ✓ forcats 0.5.0
 ```
 
 ```
-## ── Conflicts ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()
+── Conflicts ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+x dplyr::filter() masks stats::filter()
+x dplyr::lag()    masks stats::lag()
 ```
 
 ```r
@@ -49,21 +49,21 @@ R.version
 ```
 
 ```
-##                _                           
-## platform       x86_64-apple-darwin15.6.0   
-## arch           x86_64                      
-## os             darwin15.6.0                
-## system         x86_64, darwin15.6.0        
-## status                                     
-## major          3                           
-## minor          6.2                         
-## year           2019                        
-## month          12                          
-## day            12                          
-## svn rev        77560                       
-## language       R                           
-## version.string R version 3.6.2 (2019-12-12)
-## nickname       Dark and Stormy Night
+               _                           
+platform       x86_64-apple-darwin15.6.0   
+arch           x86_64                      
+os             darwin15.6.0                
+system         x86_64, darwin15.6.0        
+status                                     
+major          3                           
+minor          6.2                         
+year           2019                        
+month          12                          
+day            12                          
+svn rev        77560                       
+language       R                           
+version.string R version 3.6.2 (2019-12-12)
+nickname       Dark and Stormy Night       
 ```
 
 ## Loading and preprocessing the data -- raw_data_in
@@ -77,8 +77,8 @@ zip_file_download
 ```
 
 ```
-##     zip_file_download
-## 1 2020-08-24 06:05:50
+    zip_file_download
+1 2020-08-24 06:05:50
 ```
 
 ```r
@@ -87,7 +87,7 @@ data_read_in_timestamp
 ```
 
 ```
-## [1] "2020-08-25 17:56:37 MDT"
+[1] "2020-08-26 05:21:14 MDT"
 ```
 
 ```r
@@ -97,7 +97,7 @@ ifelse(file.exists("activity.csv")==TRUE,
 ```
 
 ```
-## [1] "activity.csv available"
+[1] "activity.csv available"
 ```
 
 ```r
@@ -106,13 +106,13 @@ head(raw_data_in)
 ```
 
 ```
-##   steps       date interval
-## 1    NA 2012-10-01        0
-## 2    NA 2012-10-01        5
-## 3    NA 2012-10-01       10
-## 4    NA 2012-10-01       15
-## 5    NA 2012-10-01       20
-## 6    NA 2012-10-01       25
+  steps       date interval
+1    NA 2012-10-01        0
+2    NA 2012-10-01        5
+3    NA 2012-10-01       10
+4    NA 2012-10-01       15
+5    NA 2012-10-01       20
+6    NA 2012-10-01       25
 ```
 
 ## Data checks -- raw_data_in
@@ -126,7 +126,7 @@ nrow(raw_data_in)
 ```
 
 ```
-## [1] 17568
+[1] 17568
 ```
 
 2. Summary of **steps** variable
@@ -137,8 +137,8 @@ summary(raw_data_in$steps)
 ```
 
 ```
-##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-##    0.00    0.00    0.00   37.38   12.00  806.00    2304
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   0.00    0.00    0.00   37.38   12.00  806.00    2304 
 ```
 
 3. Summary of **interval** variable
@@ -149,8 +149,8 @@ summary(raw_data_in$interval)
 ```
 
 ```
-##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##     0.0   588.8  1177.5  1177.5  1766.2  2355.0
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    0.0   588.8  1177.5  1177.5  1766.2  2355.0 
 ```
 
 4. Stability check, for any one date (24 hour period), we should see 288 records (288 x 5 minutes per interval = 1440 minutes, 1440 minutes / 60 = 24 hours). This validates.
@@ -161,8 +161,8 @@ distinct(count(raw_data_in,date),n)
 ```
 
 ```
-##     n
-## 1 288
+    n
+1 288
 ```
 
 ## Creating the main data frame -- activity_data
@@ -224,10 +224,10 @@ ggplot(data = activity_data) +
 ```
 
 ```
-## Warning: Removed 2304 rows containing missing values (position_stack).
+Warning: Removed 2304 rows containing missing values (position_stack).
 ```
 
-![](PA1_template_files/figure-html/mean-steps-by-day-1.png)<!-- -->
+![](PA1_template_files/figure-html/figure-1-total-steps-by-day-1.png)<!-- -->
 
 The mean and median daily steps:
 
@@ -243,14 +243,14 @@ activity_data %>% select(newdate, steps) %>%
 ```
 
 ```
-## `summarise()` ungrouping output (override with `.groups` argument)
+`summarise()` ungrouping output (override with `.groups` argument)
 ```
 
 ```
-## # A tibble: 1 x 2
-##   mean_daily_steps median_daily_steps
-##              <dbl>              <int>
-## 1            9354.              10395
+# A tibble: 1 x 2
+  mean_daily_steps median_daily_steps
+             <dbl>              <int>
+1            9354.              10395
 ```
 
 ## What is the average daily activity pattern?
@@ -266,7 +266,7 @@ interval_activity <- activity_data %>%
 ```
 
 ```
-## `summarise()` regrouping output by 'interval' (override with `.groups` argument)
+`summarise()` regrouping output by 'interval' (override with `.groups` argument)
 ```
 
 ```r
@@ -277,7 +277,7 @@ ggplot(interval_activity) +
 	ggtitle("Figure 2: Average interval Activity pattern")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](PA1_template_files/figure-html/figure-2-average-interval-activity-1.png)<!-- -->
 
 This tells us the interval with the highest average daily steps is interval 835, averaging over 206 steps (across our timeframe, October, 2012 through November, 2012).  The time associated with the highest average activity corresponds to 1:55pm, which makes intuitive sense (at least it was not during sleeping hours).  The gaps observed in the plot are confirmed to be zero activity intervals.
 
@@ -290,10 +290,10 @@ interval_activity %>%
 ```
 
 ```
-## # A tibble: 1 x 3
-##   interval interval_tod mean_interval_daily_steps
-##      <int> <chr>                            <dbl>
-## 1      835 08:35 AM                          206.
+# A tibble: 1 x 3
+  interval interval_tod mean_interval_daily_steps
+     <int> <chr>                            <dbl>
+1      835 08:35 AM                          206.
 ```
 
 ## Imputing missing values -- activity_data2
@@ -317,7 +317,7 @@ interval_activity_plugs <- activity_data %>%
 ```
 
 ```
-## `summarise()` regrouping output by 'weekend_flag', 'interval' (override with `.groups` argument)
+`summarise()` regrouping output by 'weekend_flag', 'interval' (override with `.groups` argument)
 ```
 
 ```r
@@ -325,11 +325,11 @@ str(interval_activity_plugs)
 ```
 
 ```
-## tibble [576 × 4] (S3: tbl_df/tbl/data.frame)
-##  $ weekend_flag             : chr [1:576] "weekday" "weekday" "weekday" "weekday" ...
-##  $ interval                 : int [1:576] 0 5 10 15 20 25 30 35 40 45 ...
-##  $ interval_tod             : chr [1:576] "12:00 AM" "12:05 AM" "12:10 AM" "12:15 AM" ...
-##  $ mean_interval_daily_steps: num [1:576] 2.333 0.462 0.179 0.205 0.103 ...
+tibble [576 × 4] (S3: tbl_df/tbl/data.frame)
+ $ weekend_flag             : chr [1:576] "weekday" "weekday" "weekday" "weekday" ...
+ $ interval                 : int [1:576] 0 5 10 15 20 25 30 35 40 45 ...
+ $ interval_tod             : chr [1:576] "12:00 AM" "12:05 AM" "12:10 AM" "12:15 AM" ...
+ $ mean_interval_daily_steps: num [1:576] 2.333 0.462 0.179 0.205 0.103 ...
 ```
 
 ```r
@@ -342,15 +342,15 @@ interval_activity_plugs %>%
 ```
 
 ```
-## `summarise()` ungrouping output (override with `.groups` argument)
+`summarise()` ungrouping output (override with `.groups` argument)
 ```
 
 ```
-## # A tibble: 2 x 2
-##   weekend_flag max_mean_interval_daily_steps
-##   <chr>                                <dbl>
-## 1 weekday                               35.3
-## 2 weekend                               43.1
+# A tibble: 2 x 2
+  weekend_flag max_mean_interval_daily_steps
+  <chr>                                <dbl>
+1 weekday                               35.3
+2 weekend                               43.1
 ```
 
 We take a second look at the plugs...we can see that by plugging at the weekday level the more active weekend values are more precise (as opposed to a more general approach).  With Wednesday looking like a weekend day (much larger than the other weekdays), I believe this should lend a more accurate solution than just separating the weekend_flag.
@@ -366,7 +366,7 @@ interval_activity_plugs <- activity_data %>%
 ```
 
 ```
-## `summarise()` regrouping output by 'weekday', 'interval' (override with `.groups` argument)
+`summarise()` regrouping output by 'weekday', 'interval' (override with `.groups` argument)
 ```
 
 ```r
@@ -374,11 +374,11 @@ str(interval_activity_plugs)
 ```
 
 ```
-## tibble [2,016 × 4] (S3: tbl_df/tbl/data.frame)
-##  $ weekday                  : chr [1:2016] "Friday" "Friday" "Friday" "Friday" ...
-##  $ interval                 : int [1:2016] 0 5 10 15 20 25 30 35 40 45 ...
-##  $ interval_tod             : chr [1:2016] "12:00 AM" "12:05 AM" "12:10 AM" "12:15 AM" ...
-##  $ mean_interval_daily_steps: num [1:2016] 0 0 0 0 0 0 0 0 0 0 ...
+tibble [2,016 × 4] (S3: tbl_df/tbl/data.frame)
+ $ weekday                  : chr [1:2016] "Friday" "Friday" "Friday" "Friday" ...
+ $ interval                 : int [1:2016] 0 5 10 15 20 25 30 35 40 45 ...
+ $ interval_tod             : chr [1:2016] "12:00 AM" "12:05 AM" "12:10 AM" "12:15 AM" ...
+ $ mean_interval_daily_steps: num [1:2016] 0 0 0 0 0 0 0 0 0 0 ...
 ```
 
 ```r
@@ -391,20 +391,20 @@ interval_activity_plugs %>%
 ```
 
 ```
-## `summarise()` ungrouping output (override with `.groups` argument)
+`summarise()` ungrouping output (override with `.groups` argument)
 ```
 
 ```
-## # A tibble: 7 x 2
-##   weekday   max_mean_interval_daily_steps
-##   <chr>                             <dbl>
-## 1 Friday                             42.9
-## 2 Monday                             34.6
-## 3 Saturday                           43.5
-## 4 Sunday                             42.6
-## 5 Thursday                           28.5
-## 6 Tuesday                            31.1
-## 7 Wednesday                          40.9
+# A tibble: 7 x 2
+  weekday   max_mean_interval_daily_steps
+  <chr>                             <dbl>
+1 Friday                             42.9
+2 Monday                             34.6
+3 Saturday                           43.5
+4 Sunday                             42.6
+5 Thursday                           28.5
+6 Tuesday                            31.1
+7 Wednesday                          40.9
 ```
 
 First, two new variables are created, newsteps will be the original value for steps normally, but for NA records we will join on the average activity per interval (created above, interval_activity data frame). A flag is created to more easily see what we have plugged (imputed_flag).
@@ -421,7 +421,7 @@ nrow(activity_data2)==nrow(activity_data)
 ```
 
 ```
-## [1] TRUE
+[1] TRUE
 ```
 
 ```r
@@ -429,18 +429,18 @@ str(activity_data2)
 ```
 
 ```
-## 'data.frame':	17568 obs. of  11 variables:
-##  $ steps                    : int  NA NA NA NA NA NA NA NA NA NA ...
-##  $ date                     : Factor w/ 61 levels "2012-10-01","2012-10-02",..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ interval                 : int  0 5 10 15 20 25 30 35 40 45 ...
-##  $ newdate                  : Date, format: "2012-10-01" "2012-10-01" ...
-##  $ interval_tod             : chr  "12:00 AM" "12:05 AM" "12:10 AM" "12:15 AM" ...
-##  $ weekday                  : chr  "Monday" "Monday" "Monday" "Monday" ...
-##  $ weekend_flag             : chr  "weekday" "weekday" "weekday" "weekday" ...
-##  $ month                    : chr  "10: October" "10: October" "10: October" "10: October" ...
-##  $ mean_interval_daily_steps: num  1.43 0 0 0 0 ...
-##  $ newsteps                 : num  1.43 0 0 0 0 ...
-##  $ imputed_flag             : chr  "imputed (mean for interval)" "imputed (mean for interval)" "imputed (mean for interval)" "imputed (mean for interval)" ...
+'data.frame':	17568 obs. of  11 variables:
+ $ steps                    : int  NA NA NA NA NA NA NA NA NA NA ...
+ $ date                     : Factor w/ 61 levels "2012-10-01","2012-10-02",..: 1 1 1 1 1 1 1 1 1 1 ...
+ $ interval                 : int  0 5 10 15 20 25 30 35 40 45 ...
+ $ newdate                  : Date, format: "2012-10-01" "2012-10-01" ...
+ $ interval_tod             : chr  "12:00 AM" "12:05 AM" "12:10 AM" "12:15 AM" ...
+ $ weekday                  : chr  "Monday" "Monday" "Monday" "Monday" ...
+ $ weekend_flag             : chr  "weekday" "weekday" "weekday" "weekday" ...
+ $ month                    : chr  "10: October" "10: October" "10: October" "10: October" ...
+ $ mean_interval_daily_steps: num  1.43 0 0 0 0 ...
+ $ newsteps                 : num  1.43 0 0 0 0 ...
+ $ imputed_flag             : chr  "imputed (mean for interval)" "imputed (mean for interval)" "imputed (mean for interval)" "imputed (mean for interval)" ...
 ```
 
 ```r
@@ -457,9 +457,9 @@ count(activity_data, is.na(steps))
 ```
 
 ```
-##   is.na(steps)     n
-## 1        FALSE 15264
-## 2         TRUE  2304
+  is.na(steps)     n
+1        FALSE 15264
+2         TRUE  2304
 ```
 
 Now, let's see what comes through in the plugged steps variable (newsteps). **Figure 3** shows us a picture of what the new activity looks like, with the data we imputed/plugged.  You can see that any plugging occurred all or nothing, either all were NA before in a day, or none.
@@ -473,7 +473,7 @@ ggplot(data = activity_data2) +
 	ggtitle("Figure 3: Average interval activty distribution, NAs replaced with interval means")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
+![](PA1_template_files/figure-html/figure-3-average-interval-activity-distribution-1.png)<!-- -->
 
 This shows the change in mean/median due to our imputation process.  The mean rises by 15%.
 
@@ -495,7 +495,7 @@ temp <- activity_data2 %>%
 ```
 
 ```
-## `summarise()` ungrouping output (override with `.groups` argument)
+`summarise()` ungrouping output (override with `.groups` argument)
 ```
 
 ```r
@@ -503,10 +503,10 @@ temp %>% select(mean_daily_steps, med_daily_steps)
 ```
 
 ```
-## # A tibble: 1 x 2
-##   mean_daily_steps med_daily_steps
-##              <dbl>           <int>
-## 1            9354.           10395
+# A tibble: 1 x 2
+  mean_daily_steps med_daily_steps
+             <dbl>           <int>
+1            9354.           10395
 ```
 
 ```r
@@ -514,10 +514,10 @@ temp %>% select(mean_daily_newsteps, med_daily_newsteps)
 ```
 
 ```
-## # A tibble: 1 x 2
-##   mean_daily_newsteps med_daily_newsteps
-##                 <dbl>              <dbl>
-## 1              10821.              11015
+# A tibble: 1 x 2
+  mean_daily_newsteps med_daily_newsteps
+                <dbl>              <dbl>
+1              10821.              11015
 ```
 
 ```r
@@ -525,10 +525,10 @@ temp %>% select(pct_increase_mean)
 ```
 
 ```
-## # A tibble: 1 x 1
-##   pct_increase_mean
-##               <dbl>
-## 1             0.157
+# A tibble: 1 x 1
+  pct_increase_mean
+              <dbl>
+1             0.157
 ```
 
 # Are there differences in activity patterns between weekdays and weekends?
@@ -545,7 +545,7 @@ for_panel_plot <- activity_data2 %>%
 ```
 
 ```
-## `summarise()` regrouping output by 'weekend_flag' (override with `.groups` argument)
+`summarise()` regrouping output by 'weekend_flag' (override with `.groups` argument)
 ```
 
 ```r
@@ -559,8 +559,8 @@ ggplot(for_panel_plot) +
 ```
 
 ```
-## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+`geom_smooth()` using method = 'loess' and formula 'y ~ x'
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
+![](PA1_template_files/figure-html/figure-4-weekday-versus-weekend-activity-1.png)<!-- -->
 

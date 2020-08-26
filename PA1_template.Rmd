@@ -8,7 +8,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, tidy = TRUE, comment = "", results = "markup")
 ```
 
 # Activity Monitoring
@@ -123,7 +123,7 @@ activity_data <- raw_data_in %>%
 
 **Figure 1** shows activity level for each day.  We note the existence of 2,304 NAs for the steps variable.  Most data appear to be around 10,000 steps, which is supported by the mean/median reported above.
 
-```{r 'mean-steps-by-day'}
+```{r 'figure-1-total-steps-by-day'}
 #--# histogram of the total number of steps taken each day
 ggplot(data = activity_data) +
 	geom_col(mapping = aes(x=newdate, y=steps), fill="blue") +
@@ -133,7 +133,7 @@ ggplot(data = activity_data) +
 
 The mean and median daily steps:
 
-```{r 'mean-steps-by-day2'}
+```{r}
 #--# report the mean and median total number of steps taken per day
 activity_data %>% select(newdate, steps) %>%
 	group_by(newdate) %>%
@@ -148,7 +148,7 @@ activity_data %>% select(newdate, steps) %>%
 
 Here we will examine the patterns in activity by grouping the intervals/steps across days. **Figure 2** shows such activity -- note, the width of the output here is (as expected) 24 hours.
 
-```{r}
+```{r 'figure-2-average-interval-activity'}
 interval_activity <- activity_data %>% 
 	select(interval, interval_tod, steps) %>%
 	group_by(interval, interval_tod) %>% 
@@ -241,7 +241,7 @@ count(activity_data, is.na(steps))
 
 Now, let's see what comes through in the plugged steps variable (newsteps). **Figure 3** shows us a picture of what the new activity looks like, with the data we imputed/plugged.  You can see that any plugging occurred all or nothing, either all were NA before in a day, or none.
 
-```{r}
+```{r 'figure-3-average-interval-activity-distribution'}
 #--# histogram of the total number of steps taken each day
 ggplot(data = activity_data2) +
 	geom_col(mapping = aes(x=newdate, y=newsteps, fill=imputed_flag)) +
@@ -274,7 +274,7 @@ temp %>% select(pct_increase_mean)
 
 Differences in activity levels can be observed for this subject (recall this is one person's data, October/November).  Looking at **Figure 4**, one notices more early morning activity during the week.  Weekends look as if the subject is less active in the morning, but once the day unfolds activity levels increase above weekday levels and maintain.
 
-```{r}
+```{r 'figure-4-weekday-versus-weekend-activity'}
 #--# panel plot containing a time series plot
 for_panel_plot <- activity_data2 %>%
 	select(weekend_flag, interval, newsteps) %>%
